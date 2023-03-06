@@ -92,3 +92,50 @@ Why does the index direction (asc/desc) matter in a compound index ?
 > Finding a record in a BTree takes O(Log(n)) time. Finding a range of records in order is only OLog(n) + k where k is the number of records to return.
 If the records are out of order, the cost could be as high as OLog(n) * k
 
+# Lab 3: Multikey
+   
+Write a query with the proper index to get the total quantity for shipments to a given country where agents contain a list of given agents.
+
+> Index the agents array and write an aggregation with a $all match.
+
+For the next version of the application, the customer will expect a huge growth of the agents array.
+In average, documents will contain 50k agents but some documents can embed N x 100K agents.
+
+What is the impact on our previous index?
+   
+> Each item of the array will be persisted as a key in the index. Expect to have a significant growth of the multikey index impacting the writes.
+   
+Is it still valid to keep it?
+What could be our recommendation?
+
+> https://www.mongodb.com/developer/products/mongodb/schema-design-anti-pattern-massive-arrays/
+> http://www.askasya.com/post/largeembeddedarrays/
+
+# Lab 4: Covered queries
+   
+Write a query to retrieve the most recent shipment date to “China” for “Hedwig”.
+
+```
+db.shipments.find({ to: "China", recipient: "Hedwig" }, { _id: 0, date: 1 }).sort({ date: -1 }).limit(1)
+
+> Do not forget to project _id : 0 
+
+With the appropriate index, you should be able to have a covered query.
+How can I detect that the query is covered by an index with explain()?
+   
+> No FETCH stage!
+   
+# Lab 5: TTL
+   
+What are the drawbacks of using TTL indexes?
+
+> No management of the internal deletion batch (execution time, limit etc) that can trigger unwanted IOPS peaks.
+   
+In which cases TTL indexes can be leveraged?
+   
+> Small and short living documents
+   
+Describe a valid alternative to TTL indexes to handle physical deletes.
+⇒ You can propose an algorithm.  
+
+> Implement a batch. Fetch expired documents _ids (leverage a simple date field index) with a $limit. Then build some chunks of _ids and perform a simple deleteMany with an array if _ids. You can schedule the batch to run during appropriate hours and proper $limit and chunk sizes.
