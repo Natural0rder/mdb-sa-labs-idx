@@ -54,7 +54,7 @@ What should be our recommendation in this case?
 > There are a couple reasons not to use your own _id that you should consider: first, you must be very confident that it is unique or be willing to handle duplicate key exceptions. Second, you should keep in mind the tree structure of an index and how random or non-random your insertion order will be. ObjectIds have an excellent insertion order as far as the index tree is concerned: they always are increasing, meaning they are always being inserted at the right edge of the B-tree. This, in turn, means that MongoDB only has to keep the right edge of the B-tree in memory.
 Conversely, a random value in the _id field means that _ids will be inserted all over the tree. Then the machine must move a page of the index into memory, update a tiny piece of it, then probably ignore it until it slides out of memory again. This is less efficient.
 
-# Lab 2: Compound indexes
+# Lab 2: Compound
    
 For a new use case, we need to provide the list of distinct materials shipped to a given country for a given recipient.
 
