@@ -118,6 +118,7 @@ Write a query to retrieve the most recent shipment date to “China” for “He
 ```
 db.shipments.find({ to: "China", recipient: "Hedwig" }, { _id: 0, date: 1 }).sort({ date: -1 }).limit(1)
 
+
 > Do not forget to project _id : 0 
 
 With the appropriate index, you should be able to have a covered query.
