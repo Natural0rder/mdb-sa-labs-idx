@@ -139,4 +139,4 @@ In which cases TTL indexes can be leveraged?
 Describe a valid alternative to TTL indexes to handle physical deletes.
 ⇒ You can propose an algorithm.  
 
-> Implement a batch. Fetch expired documents _ids (leverage a simple date field index) with a $limit. Then build some chunks of _ids and perform a simple deleteMany with an array if _ids. You can schedule the batch to run during appropriate hours and proper $limit and chunk sizes.
+> Implement a batch. Fetch expired documents _ids (leverage a simple date field index) with a $limit. Then build some chunks of _ids and perform a simple deleteMany with an array of _ids. You can schedule the batch to run during appropriate hours and proper $limit and chunk sizes.
