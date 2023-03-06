@@ -54,5 +54,41 @@ What should be our recommendation in this case?
 > There are a couple reasons not to use your own _id that you should consider: first, you must be very confident that it is unique or be willing to handle duplicate key exceptions. Second, you should keep in mind the tree structure of an index and how random or non-random your insertion order will be. ObjectIds have an excellent insertion order as far as the index tree is concerned: they always are increasing, meaning they are always being inserted at the right edge of the B-tree. This, in turn, means that MongoDB only has to keep the right edge of the B-tree in memory.
 Conversely, a random value in the _id field means that _ids will be inserted all over the tree. Then the machine must move a page of the index into memory, update a tiny piece of it, then probably ignore it until it slides out of memory again. This is less efficient.
 
+# Lab 2: Compound indexes
+   
+For a new use case, we need to provide the list of distinct materials shipped to a given country for a given recipient.
 
+What is the best compound index to support this query ?
+What if we want to sort by material in alphabetical order?
+   
+> Compound index with "to", "recipient" and "material" (for nice a covered query)
+
+```
+[
+  {
+    $match: {
+      to: "China",
+      recipient: "Hedwig",
+    },
+  },
+  {
+    $group: {
+      _id : "$material"
+    }
+  },
+  {
+    $sort : { _id : 1 }
+  }
+]
+```
+
+What if we reverse to and recipient in the “E” part of the index?
+   
+> If the order in the E does not always matter, having a look at the order can help to handle more queries (prefixes). => We want to hit a compound index as much and as often as possible.
+> On the other hand Lower cardinality first may significantly improve prefix compression causing the index to take up less space on disk and in RAM.
+
+Why does the index direction (asc/desc) matter in a compound index ?
+
+> Finding a record in a BTree takes O(Log(n)) time. Finding a range of records in order is only OLog(n) + k where k is the number of records to return.
+If the records are out of order, the cost could be as high as OLog(n) * k
 
