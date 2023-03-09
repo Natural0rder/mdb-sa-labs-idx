@@ -1,6 +1,6 @@
 # mdb-sa-labs-idx
 
-First, restore the follwing [dump](https://s3.eu-west-3.amazonaws.com/sylvain.chambon/saescape/shipments.tar.gz) in a Atlas M10 or a local database with mongorestore.
+First, restore the following [dump](https://s3.eu-west-3.amazonaws.com/sylvain.chambon/saescape/shipments.tar.gz) in a Atlas M10 or a local database with mongorestore.
 On Atlas:
 
 ```
